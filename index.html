@@ -151,7 +151,7 @@
       <section>
       <h3>Generic rules</h3>
       <p>
-        A generic rule followed in this specification is that an <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band track</a> as exposed in HTML only ever represents a single HTML semantic concept. When mapping from a <a title="definition" href="#MediaResourceTerm" class="internalDFN">media resource</a>, sometimes an <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band track</a> does not relate 1-to-1 to a HTML text, audio or video track.
+        A generic rule followed in this specification is that an <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band track</a> as exposed in HTML only ever represents a single HTML semantic concept. When mapping from a <a title="definition" href="#MediaResourceTerm" class="internalDFN">media resource</a>, sometimes an <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band track</a> does not relate 1-to-1 to a <a title="definition" href="#InbandTrackTerm" class="internalDFN">HTML Text, Audio or Video Track</a>.
       </p>
       <p class="note">For example, an HTML <code>TextTrack</code> object is either a subtitle track or a caption track, never both. However, <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band tracks</a> may encapsulate caption and subtitle cues of the same language as a single <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band track</a>. Since a caption track is essentially a subtitle track with additional cues of transcripts of audio-only information, such an encapsulation in a single in-band track can save space. In HTML, these tracks should be exposed as two <code>TextTrack</code> objects, since they represent different HTML semantic concepts. The cues appear in their relevant tracks - subtitle cues would be present in both. This allows users to choose between the two tracks and activate the desired one in the same manner that they do when the two tracks are provided through two track elements.
       </p>
@@ -165,13 +165,13 @@
         Another generic rule to follow for <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band tracks</a> is that in order to map them to <code>TextTrack</code> objects, the contents of the track need to be mapped to media-time aligned cues that relate to a non-zero interval of time.
       </p>
       <p>
-        For each media resource format supported in this specification, and identified by its MIME type, and for each type of track allowed in this format, the following mappings are defined:
+        For every MIME-type/subtype of an existing media container format, this specification defines the following information:
       </p>
       <ol>
-        <li>How to identify the type and number of <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Track(s)</a> to expose, and as a consequence the <a title="definition" href="#HTMLTrackListTerm" class="internalDFN">TrackList(s)</a> to which the track(s) should be be added.</li>
-        <li>How to determine the position of the <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Track(s)</a> in the <a title="definition" href="#HTMLTrackListTerm" class="internalDFN">TrackList(s)</a>, i.e. how the track order in the media containers map to the track order in the HTML track lists.</li>
-        <li>How to set the track attributes <code>id</code>, <code>kind</code>, <code>language</code> and <code>label</code> for <a title="definition" href="#SourcedTrackTerm" class="internalDFN">sourced</a> <code>TextTrack</code>, <code>AudioTrack</code> and <code>VideoTrack</code>.</li>
-        <li>How to map track content into text track cues.</li>
+        <li>Track order. How to identify the type of <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Track(s)</a>.</li>
+        <li>Setting <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Track</a> attributes 'id', 'kind', 'language' and 'label' for <a title="definition" href="#SourcedTrackTerm" class="internalDFN">sourced</a> HTML <code>TextTrack</code>.</li>
+        <li>Setting the track attributes 'id', 'kind', 'language' and 'label' for <a title="definition" href="#SourcedTrackTerm" class="internalDFN">sourced</a> <code>AudioTrack</code> and <code>VideoTrack</code>.</li>
+        <li>Mapping track content into text track cues.</li>
       </ol>
       </section>
     </section>
@@ -236,6 +236,12 @@
                 Content of the 'lang' attribute in the AdaptationSet or ContentComponent element.
               </td>
             </tr>
+            <tr>
+              <th>inBandMetadataTrackDispatchType</th>
+              <td>
+                If @kind is "metadata" the concatenation of the AdaptationSet element and all child Role descriptors. The empty string otherwise.
+              </td>
+            </tr>
           </table>
         </li>
 
@@ -289,10 +295,13 @@
 
         <li><p>Mapping Text Track content into text track cues</p>
           <p>
-            DASH text track data may be contained in files or encapsulated in MPEG media container formats ISOBMFF and MPEG-2 TS. DASH text track data contained in a file may be in the WebVTT or TTML format [[ISO14496-30]], 3GPP Timed Text format [[3GPP-TT]], or other format. Encapsulated DASH text track data may be in the format defined in this specification for <a href='#ISOBMFF-TT'>ISOBMFF text track</a> or <a href='#MPEG2TS-TT'>MPEG-2 TS text track</a>. 
+            TextTrackCues may be sourced from DASH media content in the WebVTT, TTML, MPEG-2 TS or ISOBMFF format. 
           </p>
           <p>
-            DASH text track data is in a file in the WebVTT format if the file MIME type is "text/vtt" and should be exposed as a VTTCue as defined in [[WEBVTT]]. DASH text track data is in a file in the TTML format if the file MIME type is "application/ttml+xml" and should be exposed as an as yet to be defined TTMLCue. Alternatively, browsers can also map the TTML features to WebVTTCue objects. Finally, browsers that cannot render TTML [[ttaf1-dfxp]] format data should expose them as DataCue objects [[HTML5]]. In this case, the TTML file must be parsed in its entirety and then converted into a sequence of TTML Intermediate Synchronic Documents (ISDs). Each ISD creates a DataCue object with attributes sourced as follows: 
+            Media content with the MIME type "text/vtt" is in the WebVTT format and should be exposed as a VTTCue as defined in [[WEBVTT]].
+          </p>
+          <p>
+            Media content with the MIME type "application/ttml+xml" is in the TTML format and should be exposed as an as yet to be defined TTMLCue. Alternatively, browsers can also map the TTML features to WebVTTCue objects. Finally, browsers that cannot render TTML [[ttaf1-dfxp]] format data should expose them as DataCue objects [[HTML5]]. In this case, the TTML file must be parsed in its entirety and then converted into a sequence of TTML Intermediate Synchronic Documents (ISDs). Each ISD creates a DataCue object with attributes sourced as follows: 
             <p>
               <table>
                 <thead>
@@ -327,10 +336,10 @@
             </p>
           </p>
           <p>
-            DASH text track data is encapsulated in an ISOBMFF container format if the MIME type is "application/mp4" (ISOBMFF container with one track) or "video/mp4" (ISOBMFF container with multiple tracks). Text track data in this format should be exposed following the same rules as for <a href='#ISOBMFF-TT'>ISOBMFF text track</a>.
+            Media content with the MIME type "application/mp4"  or "video/mp4" is in the ISOBMFF format and should be exposed following the same rules as for <a href='#ISOBMFF-TT'>ISOBMFF text track</a>.
           </p>
           <p>
-            DASH text track data is encapsulated in an MPEG-2 TS container format if the MIME type is "video/mp2t" (MPEG-2 TS container with multiple elementary streams). Text track data in this format should be exposed following the same rules as for <a href='#MPEG2TS-TT'>MPEG-2 TS text track</a>.
+            Media content with the MIME type "video/mp2t" is in the MPEG-2 TS format and should be exposed following the same rules as for <a href='#MPEG2TS-TT'>MPEG-2 TS text track</a>.
           </p>
         </li>
       </ol>
@@ -356,10 +365,16 @@
             <li>text track:
               <ul>
                 <li>The elementary stream with PID 0x02 or the stream type value is "0x02", "0x05" or between "0x80" and "0xFF". </li>
-                <li><dfn id="captionservice">The CEA 708 caption service</dfn> [[CEA708]], as identified by a 'Caption Service Descriptor' [[ATSC65]] in the 'Elementary Stream Descriptors' in the PMT entry for a video stream with stream type 0x02 or 0x1B.</li>
+                <li><dfn id="captionservice">The CEA 708 caption service</dfn> [[CEA708]], as identified by:
+                  <ul>
+                    <li>A 'caption_service_descriptor' [[ATSC65]] in the 'Elementary Stream Descriptors' in the PMT entry for a video stream with stream type 0x02 or 0x1B.</li>
+                    <li>For 'stream_type' 0x02, the presence of caption data in the 'user_data()' field [[ATSC52]].</li>
+                    <li>For stream type 0x1B, the presence of caption data in the ‘ATSC1_data()’ field [[SCTE128-1]].</li>
+                  </ul>
+                </li>
               </ul>
-            <li>video track: the stream type value is "0x01", "0x02", "0x10", "0x1B", or between "0x1E" and "0x23"</li>
-            <li>audio track: the stream type value is "0x03", "0x04", "0x0F", "0x11", or "0x1C"</li>
+            <li>video track: the stream type value is "0x01", "0x02", "0x10", "0x1B", or between "0x1E" and "0x23".</li>
+            <li>audio track: the stream type value is "0x03", "0x04", "0x0F", "0x11", "0x1C", "0x81" or "0x87".</li>
           </ul>
         </li>
 
@@ -398,10 +413,26 @@
               <th>language</th>
               <td>@kind is
                 <ul>
-                  <li>"captions": Content of the 'language' field for the caption service in the 'Caption Service Descriptor'.</li>
+                  <li>"captions":
+                    <ul>
+                      <li>Content of the 'language' field for the caption service in the 'caption_service_descriptor', if present.</li>
+                      <li>Otherwise:
+                        <ul>
+                          <li>For the first caption service, as identified by the 'service_number' field in the 'service_block' [[CEA708]] with a value of 1, the value of '@language' of the audio track where '@kind' has the value "main".</li>
+                          <li>The empty string for all other caption services, as identified by values greater than 1 in the 'service_number' field.</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
                   <li>"subtitles": Content of the 'ISO_639_language_code' field in the 'ISO_639_language_descriptor' in the elementary stream descriptor array in the PMT.</li>
                   <li>"metadata": The empty string.</li>
                 </ul>
+              </td>
+            </tr>
+            <tr>
+              <th>inBandMetadataTrackDispatchType</th>
+              <td>
+                If @kind is "metadata", then the concatenation of the 'stream_type' byte field in the program map table and 'ES_info_length' bytes following the 'ES_info_length' field expressed in hexadecimal using <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#uppercase-ascii-hex-digits">uppercase ASCII hex digits</a>. The empty string otherwise.
               </td>
             </tr>
           </table>
@@ -425,9 +456,21 @@
                 <ul>
                   <li>"alternative": not used</li>
                   <li>"captions": not used</li>
-                  <li>"descriptions": AC3 audio in MPEG-2 TS [[ATSC52]]: bsmod=2 and full_svc=0</li><!-- see http://www.atsc.org/cms/pdf/bootcamp/PSIP_Captions_rev2.pdf -->
+                  <li>"descriptions":
+                    <ul>
+                      <li>For AC-3 audio [[ATSC52]] if the 'bsmod' field is 2 and the 'full_svc' field is 0 in the 'AC-3_audio_stream_descriptor()' in the PMT</li>
+                      <li>For E-AC-3 audio [[ATSC52]] if the 'audio_service_type' field is 2 and the 'full_service_flag' is 0 in the 'E-AC-3_audio_descriptor()' in the PMT</li>
+                      <li>For AAC audio [[SCTE193-2]] if the 'AAC_service_type' field is 2 and the 'receiver_mix_rqd' is 1 in the 'MPEG_AAC_descriptor()' in the PMT</li>
+                    </ul>
+                  </li><!-- see http://www.atsc.org/cms/pdf/bootcamp/PSIP_Captions_rev2.pdf -->
                   <li>"main": first audio (video) elementary stream in the PMT</li>
-                  <li>"main-desc": AC3 audio in MPEG-2 TS: bsmod=2 and full_svc=1</li>
+                  <li>"main-desc":
+                    <ul>
+                      <li>For AC-3 audio [[ATSC52]] if the 'bsmod' field is 2 and the 'full_svc' field is 1 in the 'AC-3_audio_stream_descriptor()'</li>
+                      <li>For E-AC-3 audio [[ATSC52]] if the 'audio_service_type' field is 2 and the 'full_service_flag' is 1 in the 'E-AC-3_audio_descriptor()'</li>
+                      <li>For AAC audio [[SCTE193-2]] if the 'AAC_service_type' field is 2 and the 'receiver_mix_rqd' is 0 in the 'MPEG_AAC_descriptor()'</li>
+                    </ul>
+                  </li>
                   <li>"sign": not used</li>
                   <li>"subtitles": not used</li>
                   <li>"translation": not first audio elementary stream in the PMT and bsmod=0</li>
@@ -647,6 +690,21 @@
                 Content of the 'language' field in the MediaHeaderBox.
               </td>
             </tr>
+            <tr>
+              <th>inBandMetadataTrackDispatchType</th>
+              <td>
+                <ul>
+                  <li>@kind is "metadata":
+                    <ul>
+                      <li>if a 'XMLMetaDataSampleEntry' box is present the concatenation of the string "metx", a U+0020 SPACE character, and the value of the 'namespace' field</li>
+                      <li>if a 'TextMetaDataSampleEntry' box is present the concatenation of the string "mett", a U+0020 SPACE character, and the value of the 'mime_format field'</li>
+                      <li>otherwise the empty string</li>
+                    </ul>
+                  </li>
+                  <li>otherwise the empty string</li>
+                </ul>
+              </td>
+            </tr>
           </table>
         </li>
 
@@ -851,6 +909,12 @@
                 Content of the 'language' field of the track.
               </td>
             </tr>
+            <tr>
+              <th>inBandMetadataTrackDispatchType</th>
+              <td>
+                If @kind is "metadata", then the value of the 'CodecID' element. The empty string otherwise.
+              </td>
+            </tr>
           </table>
           <p>
             Tracks of kind "chapters" are found in the "Chapters" section of the WebM file Segment, which are all at the beginning of the WebM file, such that chapters can be used for navigation. The details of this mapping have not been specified yet and simply point to the more powerful Matroska chapter specification [[Matroska]]. Presumably, the 'id' attribute could be found in 'EditionUID', 'label' is empty, and 'language' can come from the first ChapterAtom's 'ChapLanguage' value.
@@ -968,12 +1032,12 @@
 
         <li><p>Determining the type of track</p>
           <p>
-            A user agent recognises and supports data from a Ogg resource as being equivalent to a HTML track based on the value of the 'role' field of the fisbone header in Ogg Skeleton:
+            A user agent recognises and supports data from a Ogg resource as being equivalent to a HTML track based on the value of the 'Role' field of the fisbone header in Ogg Skeleton:
           </p>
           <ul>
-            <li>text track:  'role' starts with "text"</li>
-            <li>video track: 'role' starts with "video"</li>
-            <li>audio track: 'role' starts with "audio"</li>
+            <li>text track:  'Role' starts with "text"</li>
+            <li>video track: 'Role' starts with "video"</li>
+            <li>audio track: 'Role' starts with "audio"</li>
           </ul>
           <p>
             If no Skeleton track is available, determine the type based on the codec used in the BOS pages, e.g. Vorbis is an "audio" track and "theora" is a video track.
@@ -996,13 +1060,13 @@
               <th>kind</th>
               <td>
                 <p>
-                  Map the content of the 'role' message header fields of Ogg Skeleton as follows:
+                  Map the content of the 'Role' message header fields of Ogg Skeleton as follows:
                 </p>
                 <ul>
-                  <li>"captions": 'role' is "text/captions“</li>
-                  <li>"subtitles": 'role' is "text/subtitle" or "text/karaoke“</li>
-                  <li>"descriptions": 'role' is "text/textaudiodesc“</li>
-                  <li>"chapters": 'role' is "text/chapters"</li>
+                  <li>"captions": 'Role' is "text/captions“</li>
+                  <li>"subtitles": 'Role' is "text/subtitle" or "text/karaoke“</li>
+                  <li>"descriptions": 'Role' is "text/textaudiodesc“</li>
+                  <li>"chapters": 'Role' is "text/chapters"</li>
                   <li>"metadata": otherwise</li>
                 </ul>
               </td>
@@ -1017,6 +1081,12 @@
               <th>language</th>
               <td>
                 Content of the 'language' message header field of the fisbone header. If no Skeleton header is available, the empty string.
+              </td>
+            </tr>
+            <tr>
+              <th>inBandMetadataTrackDispatchType</th>
+              <td>
+                If @kind is "metadata", then the value of the 'Role' header field. The empty string otherwise.
               </td>
             </tr>
           </table>
@@ -1038,18 +1108,18 @@
               <th>kind</th>
               <td>
                 <p>
-                  Map the content of the 'role' message header fields of Ogg Skeleton as follows:
+                  Map the content of the 'Role' message header fields of Ogg Skeleton as follows:
                 </p>
                 <ul>
-                  <li>"alternative": 'role' is "audio/alternate" or "video/alternate"</li>
-                  <li>"captions": 'role' is "video/captioned"</li>
-                  <li>"descriptions": 'role' is "audio/audiodesc"</li>
-                  <li>"main": 'role' is "audio/main" or "video/main"</li>
-                  <li>"main-desc": 'role' is "audio/described"</li>
-                  <li>"sign": 'role' is "video/sign"</li>
-                  <li>"subtitles": 'role' is "video/subtitled"</li>
-                  <li>"translation": 'role' is "audio/dub"</li>
-                  <li>"commentary": 'role' is "audio/commentary"</li>
+                  <li>"alternative": 'Role' is "audio/alternate" or "video/alternate"</li>
+                  <li>"captions": 'Role' is "video/captioned"</li>
+                  <li>"descriptions": 'Role' is "audio/audiodesc"</li>
+                  <li>"main": 'Role' is "audio/main" or "video/main"</li>
+                  <li>"main-desc": 'Role' is "audio/described"</li>
+                  <li>"sign": 'Role' is "video/sign"</li>
+                  <li>"subtitles": 'Role' is "video/subtitled"</li>
+                  <li>"translation": 'Role' is "audio/dub"</li>
+                  <li>"commentary": 'Role' is "audio/commentary"</li>
                   <li>"": otherwise</li>
                 </ul>
               </td>
