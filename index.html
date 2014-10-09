@@ -130,8 +130,26 @@
       <h2>Introduction</h2>
       <p>
         The specification defines mappings from audio, video and other data (textual or binary) tracks contained in or referenced by media resources to HTML <code>VideoTrack</code>, <code>AudioTrack</code>, and <code>TextTrack</code> objects.</p>
-      <p>In this specification, the term <dfn id="MediaResourceTerm">media resource</dfn> designates a <dfn id="MediaContainerTerm">media container</dfn>, where a file conformant to the format of this media container actually includes the media data in its body or payload; or a <dfn id="MediaManifestTerm">media manifest</dfn>, where a file conformant to the format of this manifest actually references the media data, possibly through another manifest. As an example, MP4 files are typically media containers while MPEG-DASH MPD files are typically media manifests. The term <dfn id="InbandTrackTerm">in-band track</dfn> refers to media data of a single type ,i.e. parsed by a single parser or decoded by a single decoder, included or referenced by a media container. The term <dfn id="HTMLTrackTerm">HTML Track</dfn> refers to either an HTML <code>VideoTrack</code>, <code>AudioTrack</code> or <code>TextTrack</code> object. Similarly, the term <dfn id="TrackListTerm">HTML TrackList</dfn> refers to either an HTML <code>VideoTrackList</code>, <code>AudioTrackList</code> or <code>TextTrackList</code> object. The term <dfn id="SourcedTrackTerm">sourced Track</dfn> designates an <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Track</a> created according the mappings defined in this specification, as opposed to <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Tracks</a> created because of the presence of <code>track</code> element in the HTML code.
+      
+      <section>
+        <h3>Terms and definitions</h3>
+      <p>In this specification, the term <dfn id="MediaResourceTerm">media resource</dfn> is <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#media-resource">as defined in the HTML 5 specification</a>. More specifically, in this specification, it designates either a <dfn id="MediaContainerTerm">media container</dfn>, where a file conformant to the format of this media container actually includes the media data in its body or payload; or a <dfn id="MediaManifestTerm">media manifest</dfn>, where a file conformant to the format of this manifest actually references the media data, possibly through another manifest.</p>
+
+      <p class="note">As an example, MP4 files are typically media containers while MPEG-DASH MPD files are typically media manifests.</p>
+
+      <p>The term <dfn id="TrackTerm">track</dfn>, is understood as in the HTML 5 specification or in the HTML 5 Media Source Extension specification and refers to media data of a single type, i.e. parsed by a single parser or decoded by a single decoder. Tracks may be of type video, audio, text, metadata or others, and media data in these tracks may be encoded as text or binary data.</p>
+      <p class="note">This definition is meant to be the same as in the HTML 5 specification and should probably be moved there since there is no such definition.</p>
+
+      <p>The term <dfn id="InbandTrackTerm">in-band track</dfn> refers to a track, not referenced directly by an <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#the-track-element">HTML <code>track</code> element</a>, but rather contained in or referenced by a media resource indicated in an <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#the-source-element">HTML 5 <code>source</code> element</a> or <code>src</code> attribute.</p>
+      <p class="note">This definition is meant to be the same as in the HTML 5 specification and should probably be moved there since there is no such definition. It is more generic than the <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#sourcing-in-band-text-tracks">in-band text tracks</a> or <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#text-track-in-band-metadata-track-dispatch-type">in-band metadata tracks</a> defined there, in the sense that in-band tracks may be audio or video tracks.</p>
+
+      <p>The term <dfn id="HTMLTrackTerm">HTML Track</dfn> refers to either an HTML <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#videotrack"><code>VideoTrack</code></a>, <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#audiotrack"><code>AudioTrack</code></a> or <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#texttrack"><code>TextTrack</code></a> object as defined in HTML 5 and is used to avoid confusion with the <a title="definition" href="#TrackTerm" class="internalDFN">track</a> term. </p>
+      <p>Similarly, the term <dfn id="TrackListTerm">HTML TrackList</dfn> refers to either an HTML <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#videotracklist"><code>VideoTrackList</code></a>, <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#audiotracklist"><code>AudioTrackList</code></a> or <a href="http://www.w3.org/html/wg/drafts/html/CR/embedded-content-0.html#texttracklist"><code>TextTrackList</code></a> object.</p>
+      <p>The term <dfn id="SourcedTrackTerm">sourced HTML Track</dfn> designates an <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Track</a> created according the mappings defined in this specification, as opposed to <a title="definition" href="#HTMLTrackTerm" class="internalDFN">HTML Tracks</a> created because of the presence of <code>track</code> element in the HTML document.
       </p>
+      </section>
+      <section>
+      <h3>Generic rules</h3>
       <p>
         A generic rule followed in this specification is that an <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band track</a> as exposed in HTML only ever represents a single HTML semantic concept. When mapping from a <a title="definition" href="#MediaResourceTerm" class="internalDFN">media resource</a>, sometimes an <a title="definition" href="#InbandTrackTerm" class="internalDFN">in-band track</a> does not relate 1-to-1 to a HTML text, audio or video track.
       </p>
@@ -155,6 +173,7 @@
         <li>How to set the track attributes <code>id</code>, <code>kind</code>, <code>language</code> and <code>label</code> for <a title="definition" href="#SourcedTrackTerm" class="internalDFN">sourced</a> <code>TextTrack</code>, <code>AudioTrack</code> and <code>VideoTrack</code>.</li>
         <li>How to map track content into text track cues.</li>
       </ol>
+      </section>
     </section>
 
     <section id='mpegdash'>
