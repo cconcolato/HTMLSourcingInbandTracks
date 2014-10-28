@@ -722,12 +722,12 @@
 
         <li><p>Determining the type of track</p>
           <p>
-            A user agent recognises and supports data from a MPEG-4 TrackBox as being equivalent to a HTML track based on the value of the 'handler_type' field in the HandlerBox ('hdlr) of the MediaBox ('mdia') of the TrackBox:
+            A user agent shall create HTML Track objects from [[ISOMBFF]] tracks based on the value of the <code>handler_type</code> field in the <code>HandlerBox</code> of the <code>MediaBox</code> of the <code>TrackBox</code> of those tracks as follows:
           </p>
           <ul>
-            <li>text track: the 'handler_type' value is "meta", "subt" or "text"</li>
-            <li>video track: the 'handler_type' value is "soun"</li>
-            <li>audio track: the 'handler_type' value is "vide"</li>
+            <li>If the <code>handler_type</code> value is <code>meta</code>, <code>subt</code> or <code>text</code>, the user agent shall create a <code>TextTrack</code> object.</li>
+            <li>If the <code>handler_type</code> value is <code>soun</code>, the user agent shall create a <code>AudioTrack</code> object.</li>
+            <li>If the <code>handler_type</code> value is <code>vide</code>, the user agent shall create a <code>VideoTrack</code> object.</li>
           </ul>
         </li>
 
